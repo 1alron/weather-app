@@ -29,7 +29,6 @@ fun WeatherApp() {
     CitySearchScreen(
         weatherAppUiState = weatherAppUiState,
         onQueryChange = viewModel::onQueryChange,
-
     )
 }
 

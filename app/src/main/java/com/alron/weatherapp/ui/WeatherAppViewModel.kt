@@ -2,6 +2,7 @@ package com.alron.weatherapp.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.alron.weatherapp.BuildConfig
 import com.alron.weatherapp.api.ApiClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -33,7 +34,7 @@ class WeatherAppViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val result = ApiClient.weatherApi.searchCities(
-                    key = "d7ecf7a9e6054a2eb07160929250407",
+                    key = BuildConfig.WEATHER_API_KEY,
                     query = query
                 )
                 _uiState.update {
