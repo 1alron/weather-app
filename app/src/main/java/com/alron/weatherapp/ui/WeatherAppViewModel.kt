@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alron.weatherapp.BuildConfig
 import com.alron.weatherapp.api.ApiClient
+import com.alron.weatherapp.api.City
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -27,6 +28,14 @@ class WeatherAppViewModel : ViewModel() {
                     cityList = emptyList()
                 )
             }
+        }
+    }
+
+    fun onCitySelected(city: City) {
+        _uiState.update {
+            it.copy(
+                currentCity = city,
+            )
         }
     }
 

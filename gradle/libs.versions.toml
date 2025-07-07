@@ -13,6 +13,7 @@ composeBom = "2024.09.00"
 lifecycleRuntimeKtxVersion = "2.7.0"
 lifecycleViewmodelCompose = "2.9.1"
 loggingInterceptor = "4.12.0"
+navigationCompose = "2.9.1"
 retrofit = "2.9.0"
 
 [libraries]
@@ -21,6 +22,7 @@ androidx-lifecycle-runtime-ktx-v270 = { module = "androidx.lifecycle:lifecycle-r
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleRuntimeKtxVersion" }
 androidx-lifecycle-viewmodel-compose-v291 = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodelCompose" }
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleRuntimeKtxVersion" }
+androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

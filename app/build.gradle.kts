@@ -20,7 +20,11 @@ android {
         val properties = Properties().apply {
             load(rootProject.file("local.properties").inputStream())
         }
-        buildConfigField("String", "WEATHER_API_KEY", "${properties.getProperty("WEATHER_API_KEY")}")
+        buildConfigField(
+            "String",
+            "WEATHER_API_KEY",
+            "${properties.getProperty("WEATHER_API_KEY")}"
+        )
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -43,19 +47,20 @@ android {
     }
     buildFeatures {
         compose = true
-        buildConfig=true
+        buildConfig = true
     }
 }
 
 dependencies {
 
-    implementation (libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.navigation.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
