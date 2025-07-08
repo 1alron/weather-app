@@ -3,14 +3,19 @@ package com.alron.weatherapp.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alron.weatherapp.BuildConfig
-import com.alron.weatherapp.api.ApiClient
 import com.alron.weatherapp.api.City
+import com.alron.weatherapp.api.WeatherApiService
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class WeatherAppViewModel : ViewModel() {
+@HiltViewModel
+class WeatherAppViewModel @Inject constructor(
+    private val weatherApiService: WeatherApiService
+) : ViewModel() {
     private val _uiState = MutableStateFlow(WeatherAppUiState())
     val uiState: StateFlow<WeatherAppUiState> = _uiState
 
@@ -44,7 +49,7 @@ class WeatherAppViewModel : ViewModel() {
     private fun searchCities(query: String) {
         viewModelScope.launch {
             try {
-                val result = ApiClient.weatherApi.searchCities(
+                val result = weatherApiService.searchCities(
                     key = BuildConfig.WEATHER_API_KEY,
                     query = query
                 )
