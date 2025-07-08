@@ -42,17 +42,14 @@ fun CitySearchScreen(
                 .fillMaxWidth()
         )
         Spacer(Modifier.height(dimensionResource(R.dimen.padding_small)))
-        if (weatherAppUiState.currentCity == null) {
-            LazyColumn {
-                items(weatherAppUiState.cityList) { city ->
-                    CityItem(
-                        city = city,
-                        onClick = { onCitySelected(city) }
-                    )
-                }
+        LazyColumn {
+            items(weatherAppUiState.cityList) { city ->
+                CityItem(
+                    city = city,
+                    onClick = { onCitySelected(city) }
+                )
             }
         }
-
     }
 }
 

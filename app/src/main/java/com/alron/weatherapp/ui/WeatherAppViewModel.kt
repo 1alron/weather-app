@@ -35,6 +35,8 @@ class WeatherAppViewModel : ViewModel() {
         _uiState.update {
             it.copy(
                 currentCity = city,
+                query = "",
+                cityList = emptyList()
             )
         }
     }
