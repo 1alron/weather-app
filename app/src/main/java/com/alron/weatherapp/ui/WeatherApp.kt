@@ -2,7 +2,7 @@ package com.alron.weatherapp.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -16,7 +16,7 @@ enum class Routes {
 
 @Composable
 fun WeatherApp() {
-    val viewModel: WeatherAppViewModel = viewModel()
+    val viewModel: WeatherAppViewModel = hiltViewModel()
     val weatherAppUiState = viewModel.uiState.collectAsState().value
 
     val navController: NavHostController = rememberNavController()

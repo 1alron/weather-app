@@ -4,6 +4,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.hilt.android)
+    id("kotlin-kapt")
 }
 
 android {
@@ -24,6 +26,11 @@ android {
             "String",
             "WEATHER_API_KEY",
             "${properties.getProperty("WEATHER_API_KEY")}"
+        )
+        buildConfigField(
+            "String",
+            "WEATHER_API_BASE_URL",
+            "${properties.getProperty("WEATHER_API_BASE_URL")}"
         )
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -53,6 +60,9 @@ android {
 
 dependencies {
 
+    kapt(libs.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.hilt.android)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.retrofit)
