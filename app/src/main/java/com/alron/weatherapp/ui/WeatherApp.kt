@@ -18,7 +18,6 @@ enum class Routes {
 fun WeatherApp() {
     val viewModel: WeatherAppViewModel = hiltViewModel()
     val weatherAppUiState = viewModel.uiState.collectAsState().value
-
     val navController: NavHostController = rememberNavController()
 
     NavHost(
@@ -30,7 +29,7 @@ fun WeatherApp() {
                 isShowingWeather = weatherAppUiState.currentCity != null,
                 onSearchButtonClicked = {
                     navController.navigate(Routes.SearchCities.name)
-                }
+                },
             )
         }
 

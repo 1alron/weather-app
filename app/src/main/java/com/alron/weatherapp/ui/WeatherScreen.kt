@@ -28,7 +28,7 @@ import com.alron.weatherapp.R
 fun WeatherScreen(
     isShowingWeather: Boolean,
     onSearchButtonClicked: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     LazyColumn(
         modifier = modifier,
@@ -66,7 +66,7 @@ fun WeatherScreen(
                         .fillMaxSize()
                 ) {
                     Text(
-                        text = "Погода...",
+                        text = "Погода",
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }

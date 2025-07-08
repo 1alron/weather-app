@@ -2,7 +2,6 @@ package com.alron.weatherapp.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.alron.weatherapp.BuildConfig
 import com.alron.weatherapp.api.City
 import com.alron.weatherapp.api.WeatherApiService
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -44,13 +43,36 @@ class WeatherAppViewModel @Inject constructor(
                 cityList = emptyList()
             )
         }
+        loadWeather(city.name)
+    }
+
+    fun loadWeather(location: String) {
+        viewModelScope.launch {
+            try {
+                _uiState.update {
+                    it.copy(
+                        currentWeather = weatherApiService.getCurrentWeather(location).current
+                    )
+                }
+                val response = weatherApiService.getWeatherForecast(
+                    location = location,
+                    days = 5
+                )
+                _uiState.update {
+                    it.copy(
+                        forecast = response.forecast
+                    )
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 
     private fun searchCities(query: String) {
         viewModelScope.launch {
             try {
                 val result = weatherApiService.searchCities(
-                    key = BuildConfig.WEATHER_API_KEY,
                     query = query
                 )
                 _uiState.update {
