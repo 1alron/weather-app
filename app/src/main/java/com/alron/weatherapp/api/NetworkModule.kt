@@ -1,5 +1,6 @@
 package com.alron.weatherapp.api
 
+import com.alron.weatherapp.BuildConfig
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,7 +14,7 @@ object NetworkModule {
 
     @Provides
     fun provideRetrofit(): Retrofit = Retrofit.Builder()
-        .baseUrl("https://api.weatherapi.com/v1/")
+        .baseUrl(BuildConfig.WEATHER_API_BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 

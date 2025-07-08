@@ -15,7 +15,6 @@ enum class Routes {
 }
 
 @Composable
-
 fun WeatherApp() {
     val viewModel: WeatherAppViewModel = hiltViewModel()
     val weatherAppUiState = viewModel.uiState.collectAsState().value

@@ -27,6 +27,11 @@ android {
             "WEATHER_API_KEY",
             "${properties.getProperty("WEATHER_API_KEY")}"
         )
+        buildConfigField(
+            "String",
+            "WEATHER_API_BASE_URL",
+            "${properties.getProperty("WEATHER_API_BASE_URL")}"
+        )
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
