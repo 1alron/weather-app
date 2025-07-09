@@ -26,7 +26,7 @@ fun WeatherApp() {
     ) {
         composable(route = Routes.Weather.name) {
             WeatherScreen(
-                isShowingWeather = weatherAppUiState.currentCity != null,
+                weatherAppUiState = weatherAppUiState,
                 onSearchButtonClicked = {
                     navController.navigate(Routes.SearchCities.name)
                 },

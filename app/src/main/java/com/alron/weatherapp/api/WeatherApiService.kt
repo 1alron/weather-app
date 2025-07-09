@@ -7,13 +7,15 @@ import retrofit2.http.Query
 interface WeatherApiService {
     @GET("search.json")
     suspend fun searchCities(
+        @Query("q") query: String,
+        @Query("lang") language: String = "ru",
         @Query("key") key: String = BuildConfig.WEATHER_API_KEY,
-        @Query("q") query: String
     ): List<City>
 
     @GET("current.json")
     suspend fun getCurrentWeather(
         @Query("q") location: String,
+        @Query("lang") language: String = "ru",
         @Query("key") key: String = BuildConfig.WEATHER_API_KEY
     ): CurrentWeatherResponse
 
@@ -21,6 +23,7 @@ interface WeatherApiService {
     suspend fun getWeatherForecast(
         @Query("q") location: String,
         @Query("days") days: Int = 5,
+        @Query("lang") language: String = "ru",
         @Query("key") key: String = BuildConfig.WEATHER_API_KEY
     ): ForecastWeatherResponse
 }

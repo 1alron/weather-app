@@ -7,4 +7,6 @@
     <dimen name="outlined_button_content_end_padding">20dp</dimen>
 
     <dimen name="search_screen_padding">32dp</dimen>
+
+    <dimen name="weather_screen_spacer_height">36dp</dimen>
 </resources>
