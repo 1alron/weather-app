@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -32,6 +33,11 @@ fun CitySearchScreen(
         OutlinedTextField(
             value = weatherAppUiState.query,
             onValueChange = onQueryChange,
+            shape = RoundedCornerShape(
+                dimensionResource(
+                    R.dimen.app_components_rounded_corner_shape
+                )
+            ),
             label = {
                 Text(
                     text =

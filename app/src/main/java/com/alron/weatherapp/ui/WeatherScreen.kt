@@ -16,9 +16,11 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -26,6 +28,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import com.alron.weatherapp.R
@@ -40,7 +43,10 @@ fun WeatherScreen(
 ) {
     LazyColumn(
         modifier = modifier
-            .padding(start = dimensionResource(R.dimen.padding_medium)),
+            .padding(
+                start = dimensionResource(R.dimen.padding_medium),
+                end = dimensionResource(R.dimen.padding_medium)
+            ),
         contentPadding = WindowInsets.safeDrawing.asPaddingValues(),
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_small))
     ) {
@@ -103,6 +109,11 @@ fun WeatherScreenTopBar(
         contentPadding = PaddingValues(
             start = dimensionResource(R.dimen.outlined_button_content_start_padding),
             end = dimensionResource(R.dimen.outlined_button_content_end_padding)
+        ),
+        shape = RoundedCornerShape(
+            dimensionResource(
+                R.dimen.app_components_rounded_corner_shape
+            )
         )
     ) {
         Icon(
@@ -130,16 +141,44 @@ fun CurrentWeather(
             style = MaterialTheme.typography.titleLarge
         )
         Spacer(Modifier.height(dimensionResource(R.dimen.padding_medium)))
-        Card {
+        Card(
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .shadow(
+                    elevation = dimensionResource(R.dimen.card_elevation),
+                    shape = RoundedCornerShape(
+                        dimensionResource(
+                            R.dimen.app_components_rounded_corner_shape
+                        )
+                    )
+                )
+        ) {
             Column(
                 modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium))
             ) {
-                Row {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Text(
                         text = stringResource(
                             R.string.temp_in_celsius,
                             weatherAppUiState.currentWeather!!.temp_c.roundToInt()
-                        )
+                        ),
+                        style = MaterialTheme.typography.headlineMedium
+                    )
+                    Spacer(Modifier.width(dimensionResource(R.dimen.padding_small)))
+                    CoilAsyncImage(
+                        url = stringResource(
+                            R.string.url_coil_format,
+                            weatherAppUiState.currentWeather.condition.icon
+                        ),
+                        contentDescription = stringResource(R.string.current_weather_icon),
+                        modifier = Modifier
+                            .height(dimensionResource(R.dimen.weather_icon_size))
+                            .width(dimensionResource(R.dimen.weather_icon_size))
                     )
                 }
                 Column {
