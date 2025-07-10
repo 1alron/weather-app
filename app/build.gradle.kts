@@ -60,6 +60,7 @@ android {
 
 dependencies {
 
+    implementation(libs.accompanist.swiperefresh)
     implementation(libs.coil.compose)
     kapt(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)

@@ -10,5 +10,6 @@ data class WeatherAppUiState(
     val currentCity: City? = null,
     val currentWeather: CurrentWeather? = null,
     val forecast: List<ForecastDay> = emptyList(),
-    val isLoadingWeatherAndForecast: Boolean = false
+    val isLoadingWeatherAndForecast: Boolean = false,
+    val weatherLoadError: String? = null
 )

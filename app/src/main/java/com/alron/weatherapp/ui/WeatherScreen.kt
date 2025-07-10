@@ -22,7 +22,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -38,91 +37,95 @@ import com.alron.weatherapp.util.NUMBER_OF_DAYS_WITH_FORECAST
 import com.alron.weatherapp.util.formatDateToRussian
 import com.alron.weatherapp.util.fromKilPerHourToMetPerSec
 import com.alron.weatherapp.util.fromMaxAndMinTempToAvg
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import kotlin.math.roundToInt
 
 @Composable
 fun WeatherScreen(
     weatherAppUiState: WeatherAppUiState,
     onSearchButtonClicked: () -> Unit,
+    onRefresh: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Box(
-        modifier = modifier.fillMaxSize()
+    val swipeState =
+        rememberSwipeRefreshState(
+            isRefreshing = weatherAppUiState.isLoadingWeatherAndForecast
+        )
+    SwipeRefresh(
+        state = swipeState,
+        onRefresh = { onRefresh() }
     ) {
-        Column(
-            modifier = Modifier
-                .padding(
-                    start = dimensionResource(R.dimen.padding_medium),
-                    top = dimensionResource(R.dimen.padding_top_bar),
-                    end = dimensionResource(R.dimen.padding_medium)
-                )
-                .verticalScroll(rememberScrollState())
-                .fillMaxSize(),
+        Box(
+            modifier = modifier.fillMaxSize()
         ) {
-            Box(
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentWidth(Alignment.CenterHorizontally)
-            ) {
-                WeatherScreenTopBar(
-                    onClick = onSearchButtonClicked,
-                    modifier = Modifier
-                )
-            }
-            if (weatherAppUiState.currentCity == null) {
-                Spacer(Modifier.height(dimensionResource(R.dimen.weather_screen_spacer_height)))
-                Text(
-                    text = stringResource(R.string.start_text),
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Center,
-                )
-            } else if (weatherAppUiState.isLoadingWeatherAndForecast == true) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Spacer(Modifier.height(dimensionResource(R.dimen.weather_screen_spacer_height)))
-                    CircularProgressIndicator()
-                }
-            } else if (weatherAppUiState.currentWeather != null &&
-                weatherAppUiState.forecast.isNotEmpty()
-            ) {
-                Column {
-                    Spacer(Modifier.height(dimensionResource(R.dimen.weather_screen_spacer_height)))
-                    CurrentWeather(
-                        weatherAppUiState = weatherAppUiState
+                    .padding(
+                        start = dimensionResource(R.dimen.padding_medium),
+                        top = dimensionResource(R.dimen.padding_top_bar),
+                        end = dimensionResource(R.dimen.padding_medium)
                     )
+                    .verticalScroll(rememberScrollState())
+                    .fillMaxSize(),
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentWidth(Alignment.CenterHorizontally)
+                ) {
+                    WeatherScreenTopBar(
+                        onClick = onSearchButtonClicked,
+                        modifier = Modifier
+                    )
+                }
+                if (weatherAppUiState.currentCity == null) {
                     Spacer(Modifier.height(dimensionResource(R.dimen.weather_screen_spacer_height)))
                     Text(
-                        text = stringResource(
-                            R.string.weather_forecast_some_days,
-                            NUMBER_OF_DAYS_WITH_FORECAST
-                        ),
-                        style = MaterialTheme.typography.titleLarge
+                        text = stringResource(R.string.start_text),
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center,
                     )
-                    Spacer(Modifier.height(dimensionResource(R.dimen.padding_medium)))
-                    LazyRow(
-                        horizontalArrangement = Arrangement.spacedBy(
-                            dimensionResource(R.dimen.padding_small)
-                        ),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    ) {
-                        itemsIndexed(weatherAppUiState.forecast) { _, forecastDay ->
-                            ForecastDayItem(forecastDay)
+                } else if (weatherAppUiState.currentWeather != null &&
+                    weatherAppUiState.forecast.isNotEmpty()
+                ) {
+                    Column {
+                        Spacer(Modifier.height(dimensionResource(R.dimen.weather_screen_spacer_height)))
+                        CurrentWeather(
+                            weatherAppUiState = weatherAppUiState
+                        )
+                        Spacer(Modifier.height(dimensionResource(R.dimen.weather_screen_spacer_height)))
+                        Text(
+                            text = stringResource(
+                                R.string.weather_forecast_some_days,
+                                NUMBER_OF_DAYS_WITH_FORECAST
+                            ),
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                        Spacer(Modifier.height(dimensionResource(R.dimen.padding_medium)))
+                        LazyRow(
+                            horizontalArrangement = Arrangement.spacedBy(
+                                dimensionResource(R.dimen.padding_small)
+                            ),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        ) {
+                            itemsIndexed(weatherAppUiState.forecast) { _, forecastDay ->
+                                ForecastDayItem(forecastDay)
+                            }
                         }
                     }
-                }
-            } else {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Spacer(Modifier.height(dimensionResource(R.dimen.weather_screen_spacer_height)))
-                    Text(
-                        text = stringResource(R.string.weather_not_found),
-                    )
+                } else if (weatherAppUiState.weatherLoadError != null) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Spacer(Modifier.height(dimensionResource(R.dimen.weather_screen_spacer_height)))
+                        Text(
+                            text = weatherAppUiState.weatherLoadError,
+                        )
+                    }
                 }
             }
         }
