@@ -114,13 +114,14 @@ fun WeatherScreen(
                     }
                 }
             } else {
-                Box(
+                Column(
                     modifier = Modifier
-                        .fillMaxSize()
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    Spacer(Modifier.height(dimensionResource(R.dimen.weather_screen_spacer_height)))
                     Text(
                         text = stringResource(R.string.weather_not_found),
-                        modifier = Modifier.align(Alignment.Center)
                     )
                 }
             }

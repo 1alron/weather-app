@@ -68,7 +68,13 @@ class WeatherAppViewModel @Inject constructor(
                     )
                 }
             } catch (e: Exception) {
-                e.printStackTrace()
+                _uiState.update {
+                    it.copy(
+                        currentWeather = null,
+                        forecast = emptyList(),
+                        isLoadingWeatherAndForecast = false
+                    )
+                }
             }
         }
     }
