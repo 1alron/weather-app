@@ -3,8 +3,18 @@
     <dimen name="padding_medium">16dp</dimen>
     <dimen name="padding_small">8dp</dimen>
 
+    <dimen name="padding_top_bar">32dp</dimen>
+
     <dimen name="outlined_button_content_start_padding">4dp</dimen>
     <dimen name="outlined_button_content_end_padding">20dp</dimen>
 
     <dimen name="search_screen_padding">32dp</dimen>
+
+    <dimen name="weather_screen_spacer_height">36dp</dimen>
+
+    <dimen name="app_components_rounded_corner_shape">12dp</dimen>
+    <dimen name="card_medium_elevation">8dp</dimen>
+    <dimen name="card_small_elevation">2dp</dimen>
+    <dimen name="padding_to_small_card_elevation">2dp</dimen>
+    <dimen name="weather_icon_size">48dp</dimen>
 </resources>

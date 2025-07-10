@@ -18,7 +18,6 @@ enum class Routes {
 fun WeatherApp() {
     val viewModel: WeatherAppViewModel = hiltViewModel()
     val weatherAppUiState = viewModel.uiState.collectAsState().value
-
     val navController: NavHostController = rememberNavController()
 
     NavHost(
@@ -27,10 +26,10 @@ fun WeatherApp() {
     ) {
         composable(route = Routes.Weather.name) {
             WeatherScreen(
-                isShowingWeather = weatherAppUiState.currentCity != null,
+                weatherAppUiState = weatherAppUiState,
                 onSearchButtonClicked = {
                     navController.navigate(Routes.SearchCities.name)
-                }
+                },
             )
         }
 

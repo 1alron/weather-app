@@ -1,20 +1,30 @@
 package com.alron.weatherapp.ui
 
+import ForecastDay
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,20 +32,33 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import com.alron.weatherapp.R
+import com.alron.weatherapp.util.NUMBER_OF_DAYS_WITH_FORECAST
+import com.alron.weatherapp.util.formatDateToRussian
+import com.alron.weatherapp.util.fromKilPerHourToMetPerSec
+import com.alron.weatherapp.util.fromMaxAndMinTempToAvg
+import kotlin.math.roundToInt
 
 @Composable
 fun WeatherScreen(
-    isShowingWeather: Boolean,
+    weatherAppUiState: WeatherAppUiState,
     onSearchButtonClicked: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    LazyColumn(
-        modifier = modifier,
-        contentPadding = WindowInsets.safeDrawing.asPaddingValues(),
-        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_small))
+    Box(
+        modifier = modifier.fillMaxSize()
     ) {
-        item {
+        Column(
+            modifier = Modifier
+                .padding(
+                    start = dimensionResource(R.dimen.padding_medium),
+                    top = dimensionResource(R.dimen.padding_top_bar),
+                    end = dimensionResource(R.dimen.padding_medium)
+                )
+                .verticalScroll(rememberScrollState())
+                .fillMaxSize(),
+        ) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -46,27 +69,57 @@ fun WeatherScreen(
                     modifier = Modifier
                 )
             }
-        }
-        if (!isShowingWeather) {
-            item {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
+            if (weatherAppUiState.currentCity == null) {
+                Spacer(Modifier.height(dimensionResource(R.dimen.weather_screen_spacer_height)))
+                Text(
+                    text = stringResource(R.string.start_text),
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center,
+                )
+            } else if (weatherAppUiState.isLoadingWeatherAndForecast == true) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(
-                        text = stringResource(R.string.start_text),
-                        modifier = Modifier.align(Alignment.Center)
-                    )
+                    Spacer(Modifier.height(dimensionResource(R.dimen.weather_screen_spacer_height)))
+                    CircularProgressIndicator()
                 }
-            }
-        } else {
-            item {
+            } else if (weatherAppUiState.currentWeather != null &&
+                weatherAppUiState.forecast.isNotEmpty()
+            ) {
+                Column {
+                    Spacer(Modifier.height(dimensionResource(R.dimen.weather_screen_spacer_height)))
+                    CurrentWeather(
+                        weatherAppUiState = weatherAppUiState
+                    )
+                    Spacer(Modifier.height(dimensionResource(R.dimen.weather_screen_spacer_height)))
+                    Text(
+                        text = stringResource(
+                            R.string.weather_forecast_some_days,
+                            NUMBER_OF_DAYS_WITH_FORECAST
+                        ),
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                    Spacer(Modifier.height(dimensionResource(R.dimen.padding_medium)))
+                    LazyRow(
+                        horizontalArrangement = Arrangement.spacedBy(
+                            dimensionResource(R.dimen.padding_small)
+                        ),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ) {
+                        itemsIndexed(weatherAppUiState.forecast) { _, forecastDay ->
+                            ForecastDayItem(forecastDay)
+                        }
+                    }
+                }
+            } else {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
                 ) {
                     Text(
-                        text = "Погода...",
+                        text = stringResource(R.string.weather_not_found),
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
@@ -85,6 +138,11 @@ fun WeatherScreenTopBar(
         contentPadding = PaddingValues(
             start = dimensionResource(R.dimen.outlined_button_content_start_padding),
             end = dimensionResource(R.dimen.outlined_button_content_end_padding)
+        ),
+        shape = RoundedCornerShape(
+            dimensionResource(
+                R.dimen.app_components_rounded_corner_shape
+            )
         )
     ) {
         Icon(
@@ -95,5 +153,123 @@ fun WeatherScreenTopBar(
         Text(
             text = stringResource(R.string.choose_city)
         )
+    }
+}
+
+@Composable
+fun CurrentWeather(
+    weatherAppUiState: WeatherAppUiState,
+    modifier: Modifier = Modifier
+) {
+    Column {
+        Text(
+            text = stringResource(
+                R.string.current_weather_in_city,
+                weatherAppUiState.currentCity!!.name
+            ),
+            style = MaterialTheme.typography.titleLarge
+        )
+        Spacer(Modifier.height(dimensionResource(R.dimen.padding_medium)))
+        Card(
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer
+            ),
+            modifier = Modifier
+                .fillMaxWidth(),
+            elevation = CardDefaults.cardElevation(
+                defaultElevation = dimensionResource(R.dimen.card_medium_elevation)
+            ),
+            shape = RoundedCornerShape(
+                dimensionResource(
+                    R.dimen.app_components_rounded_corner_shape
+                )
+            )
+        ) {
+            Column(
+                modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium))
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(
+                            R.string.temp_in_celsius,
+                            weatherAppUiState.currentWeather!!.temp_c.roundToInt()
+                        ),
+                        style = MaterialTheme.typography.headlineMedium
+                    )
+                    Spacer(Modifier.width(dimensionResource(R.dimen.padding_small)))
+                    CoilAsyncImage(
+                        url = stringResource(
+                            R.string.url_coil_format,
+                            weatherAppUiState.currentWeather.condition.icon
+                        ),
+                        contentDescription = stringResource(R.string.current_weather_icon),
+                        modifier = Modifier
+                            .height(dimensionResource(R.dimen.weather_icon_size))
+                            .width(dimensionResource(R.dimen.weather_icon_size))
+                    )
+                }
+                Column {
+                    Text(
+                        text = weatherAppUiState.currentWeather!!.condition.text
+                    )
+                    Text(
+                        text = stringResource(
+                            R.string.wind_speed_in_met_per_sec,
+                            fromKilPerHourToMetPerSec(weatherAppUiState.currentWeather.wind_kph)
+                        )
+                    )
+                    Text(
+                        text = stringResource(
+                            R.string.humidity_in_perc,
+                            weatherAppUiState.currentWeather.humidity
+                        )
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ForecastDayItem(
+    forecastDay: ForecastDay,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer
+        ),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(dimensionResource(R.dimen.padding_to_small_card_elevation)),
+        shape = RoundedCornerShape(
+            dimensionResource(
+                R.dimen.app_components_rounded_corner_shape
+            )
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = dimensionResource(R.dimen.card_small_elevation)
+        ),
+    ) {
+        Column(
+            modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium))
+        ) {
+            Text(text = formatDateToRussian(forecastDay.date))
+            Row {
+                Text(
+                    text = stringResource(
+                        R.string.temp_in_celsius, fromMaxAndMinTempToAvg(
+                            forecastDay.day.maxtemp_c, forecastDay.day.mintemp_c
+                        )
+                    )
+                )
+                CoilAsyncImage(
+                    url = stringResource(R.string.url_coil_format, forecastDay.day.condition.icon),
+                    contentDescription = stringResource(R.string.current_weather_icon)
+                )
+            }
+        }
     }
 }

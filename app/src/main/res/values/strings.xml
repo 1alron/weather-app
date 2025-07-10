@@ -4,4 +4,16 @@
     <string name="input_city">Введите город</string>
     <string name="choose_city">Выбрать город</string>
     <string name="start_text">Выберите город для отображения погоды</string>
+    <string name="weather_not_found">Погода не найдена</string>
+
+    <string name="city_region_and_country">%1$s, %2$s</string>
+    <string name="unknown_city">Город не найден</string>
+    <string name="current_weather_in_city">Погода сейчас, г. %s</string>
+    <string name="temp_in_celsius">%d°С</string>
+    <string name="wind_speed_in_met_per_sec">Скорость ветра: %dм/c</string>
+    <string name="humidity_in_perc">Влажность воздуха: %d%%</string>
+
+    <string name="current_weather_icon">Текущая погода</string>
+    <string name="url_coil_format">https:%s</string>
+    <string name="weather_forecast_some_days">Прогноз погоды на %d дней</string>
 </resources>
