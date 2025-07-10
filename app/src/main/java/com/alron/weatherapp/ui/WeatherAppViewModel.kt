@@ -7,11 +7,11 @@ import com.alron.weatherapp.api.WeatherApiService
 import com.alron.weatherapp.util.NUMBER_OF_DAYS_WITH_FORECAST
 import com.alron.weatherapp.util.NUMBER_OF_SYMBOLS_SEARCH_START
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -53,18 +53,26 @@ class WeatherAppViewModel @Inject constructor(
         _uiState.update { it.copy(isLoadingWeatherAndForecast = true) }
         viewModelScope.launch {
             try {
-                val currentDeferred = async { weatherApiService.getCurrentWeather(location) }
-                val forecastDeferred = async {
-                    weatherApiService.getWeatherForecast(
-                        location = location,
-                        days = NUMBER_OF_DAYS_WITH_FORECAST
-                    )
+                val currentResponse = try {
+                    weatherApiService.getCurrentWeather(location)
+                } catch (e: IOException) {
+                    null
                 }
+
+                val forecastResponse = try {
+                    weatherApiService.getWeatherForecast(location, NUMBER_OF_DAYS_WITH_FORECAST)
+                } catch (e: IOException) {
+                    null
+                }
+
                 _uiState.update {
                     it.copy(
-                        currentWeather = currentDeferred.await().current,
-                        forecast = forecastDeferred.await().forecast.forecastday,
-                        isLoadingWeatherAndForecast = false
+                        currentWeather = currentResponse?.current,
+                        forecast = forecastResponse?.forecast?.forecastday ?: emptyList(),
+                        isLoadingWeatherAndForecast = false,
+                        weatherLoadError = if (currentResponse == null || forecastResponse == null) {
+                            "Нет подключения к интернету"
+                        } else null
                     )
                 }
             } catch (e: Exception) {
@@ -72,7 +80,8 @@ class WeatherAppViewModel @Inject constructor(
                     it.copy(
                         currentWeather = null,
                         forecast = emptyList(),
-                        isLoadingWeatherAndForecast = false
+                        isLoadingWeatherAndForecast = false,
+                        weatherLoadError = "Ошибка загрузки: ${e.localizedMessage}"
                     )
                 }
             }

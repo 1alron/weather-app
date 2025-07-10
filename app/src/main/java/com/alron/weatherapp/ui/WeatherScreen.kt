@@ -115,7 +115,7 @@ fun WeatherScreen(
                             }
                         }
                     }
-                } else {
+                } else if (weatherAppUiState.weatherLoadError != null) {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth(),
@@ -123,7 +123,7 @@ fun WeatherScreen(
                     ) {
                         Spacer(Modifier.height(dimensionResource(R.dimen.weather_screen_spacer_height)))
                         Text(
-                            text = stringResource(R.string.weather_not_found),
+                            text = weatherAppUiState.weatherLoadError,
                         )
                     }
                 }

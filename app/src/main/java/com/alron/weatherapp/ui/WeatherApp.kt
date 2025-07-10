@@ -31,7 +31,9 @@ fun WeatherApp() {
                     navController.navigate(Routes.SearchCities.name)
                 },
                 onRefresh = {
-                    viewModel.loadWeather(weatherAppUiState.currentCity!!.name)
+                    if (weatherAppUiState.currentCity != null) {
+                        viewModel.loadWeather(weatherAppUiState.currentCity.name)
+                    }
                 }
             )
         }
