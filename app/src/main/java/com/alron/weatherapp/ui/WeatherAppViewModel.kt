@@ -4,7 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alron.weatherapp.api.City
 import com.alron.weatherapp.api.WeatherApiService
+import com.alron.weatherapp.util.NUMBER_OF_DAYS_WITH_FORECAST
+import com.alron.weatherapp.util.NUMBER_OF_SYMBOLS_SEARCH_START
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -24,7 +27,7 @@ class WeatherAppViewModel @Inject constructor(
                 query = newQuery
             )
         }
-        if (newQuery.length >= 3) {
+        if (newQuery.length >= NUMBER_OF_SYMBOLS_SEARCH_START) {
             searchCities(newQuery)
         } else {
             _uiState.update {
@@ -47,20 +50,21 @@ class WeatherAppViewModel @Inject constructor(
     }
 
     fun loadWeather(location: String) {
+        _uiState.update { it.copy(isLoadingWeatherAndForecast = true) }
         viewModelScope.launch {
             try {
-                _uiState.update {
-                    it.copy(
-                        currentWeather = weatherApiService.getCurrentWeather(location).current
+                val currentDeferred = async { weatherApiService.getCurrentWeather(location) }
+                val forecastDeferred = async {
+                    weatherApiService.getWeatherForecast(
+                        location = location,
+                        days = NUMBER_OF_DAYS_WITH_FORECAST
                     )
                 }
-                val response = weatherApiService.getWeatherForecast(
-                    location = location,
-                    days = 5
-                )
                 _uiState.update {
                     it.copy(
-                        forecast = response.forecast
+                        currentWeather = currentDeferred.await().current,
+                        forecast = forecastDeferred.await().forecast.forecastday,
+                        isLoadingWeatherAndForecast = false
                     )
                 }
             } catch (e: Exception) {
@@ -72,9 +76,11 @@ class WeatherAppViewModel @Inject constructor(
     private fun searchCities(query: String) {
         viewModelScope.launch {
             try {
-                val result = weatherApiService.searchCities(
-                    query = query
-                )
+                val result =
+                    weatherApiService.searchCities(
+                        query = query
+                    )
+
                 _uiState.update {
                     it.copy(
                         cityList = result

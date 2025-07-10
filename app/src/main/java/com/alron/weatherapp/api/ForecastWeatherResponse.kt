@@ -1,16 +1,28 @@
-package com.alron.weatherapp.api
+import com.alron.weatherapp.api.CurrentWeather
+import com.alron.weatherapp.api.Location
 
 data class ForecastWeatherResponse(
+    val location: Location,
+    val current: CurrentWeather,
     val forecast: Forecast
 )
 
 data class Forecast(
-    val forecastDays: List<ForecastDay>
+    val forecastday: List<ForecastDay>
 )
 
 data class ForecastDay(
     val date: String,
-    val avgtemp_c: Double,
+    val day: DayForecast
+)
+
+data class DayForecast(
+    val maxtemp_c: Double,
+    val mintemp_c: Double,
     val condition: WeatherCondition
 )
 
+data class WeatherCondition(
+    val text: String,
+    val icon: String
+)

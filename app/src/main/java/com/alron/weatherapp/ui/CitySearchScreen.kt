@@ -76,7 +76,7 @@ fun CityItem(
             style = MaterialTheme.typography.bodyLarge
         )
         Text(
-            text = "${city.region}, ${city.country}",
+            text = stringResource(R.string.city_region_and_country, city.region, city.country),
             style = MaterialTheme.typography.bodyMedium
         )
     }
