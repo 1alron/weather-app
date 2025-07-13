@@ -14,6 +14,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.alron.weatherapp.ui.animations.enterSlideInFromLeft
+import com.alron.weatherapp.ui.animations.enterSlideInFromRight
+import com.alron.weatherapp.ui.animations.exitSlideOutToLeft
+import com.alron.weatherapp.ui.animations.exitSlideOutToRight
 
 
 enum class Routes {
@@ -45,7 +49,13 @@ fun WeatherApp() {
             navController = navController,
             startDestination = dest
         ) {
-            composable(route = Routes.Weather.name) {
+            composable(
+                route = Routes.Weather.name,
+                enterTransition = { enterSlideInFromRight() },
+                exitTransition = { exitSlideOutToLeft() },
+                popEnterTransition = { enterSlideInFromLeft() },
+                popExitTransition = { exitSlideOutToRight() }
+            ) {
                 WeatherScreen(
                     weatherAppUiState = weatherAppUiState,
                     onSearchButtonClicked = {
@@ -67,7 +77,13 @@ fun WeatherApp() {
                 )
             }
 
-            composable(route = Routes.SearchCities.name) {
+            composable(
+                route = Routes.SearchCities.name,
+                enterTransition = { enterSlideInFromLeft() },
+                exitTransition = { exitSlideOutToRight() },
+                popEnterTransition = { enterSlideInFromRight() },
+                popExitTransition = { exitSlideOutToLeft() }
+            ) {
                 CitySearchScreen(
                     weatherAppUiState = weatherAppUiState,
                     onQueryChange = viewModel::onQueryChange,
