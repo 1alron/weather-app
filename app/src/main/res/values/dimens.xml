@@ -9,6 +9,8 @@
     <dimen name="back_button_size">40dp</dimen>
 
     <dimen name="max_text_field_and_list_width">500dp</dimen>
+    <dimen name="max_current_weather_card_width">600dp</dimen>
+    <dimen name="min_location_button_width">170dp</dimen>
 
     <dimen name="outlined_button_content_start_padding">4dp</dimen>
     <dimen name="outlined_button_content_end_padding">20dp</dimen>
