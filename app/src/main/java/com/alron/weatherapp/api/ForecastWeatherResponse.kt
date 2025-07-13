@@ -1,5 +1,4 @@
-import com.alron.weatherapp.api.CurrentWeather
-import com.alron.weatherapp.api.Location
+package com.alron.weatherapp.api
 
 data class ForecastWeatherResponse(
     val location: Location,
@@ -20,9 +19,4 @@ data class DayForecast(
     val maxtemp_c: Double,
     val mintemp_c: Double,
     val condition: WeatherCondition
-)
-
-data class WeatherCondition(
-    val text: String,
-    val icon: String
 )

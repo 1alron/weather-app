@@ -1,6 +1,5 @@
 package com.alron.weatherapp.ui
 
-import ForecastDay
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,6 +18,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -33,6 +33,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import com.alron.weatherapp.R
+import com.alron.weatherapp.api.ForecastDay
 import com.alron.weatherapp.util.NUMBER_OF_DAYS_WITH_FORECAST
 import com.alron.weatherapp.util.formatDateToRussian
 import com.alron.weatherapp.util.fromKilPerHourToMetPerSec
@@ -45,6 +46,7 @@ import kotlin.math.roundToInt
 fun WeatherScreen(
     weatherAppUiState: WeatherAppUiState,
     onSearchButtonClicked: () -> Unit,
+    onSetDefaultLocation: () -> Unit,
     onRefresh: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -113,6 +115,22 @@ fun WeatherScreen(
                             itemsIndexed(weatherAppUiState.forecast) { _, forecastDay ->
                                 ForecastDayItem(forecastDay)
                             }
+                        }
+                        OutlinedButton(
+                            onClick = onSetDefaultLocation,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = dimensionResource(R.dimen.padding_medium)),
+                            shape = RoundedCornerShape(
+                                dimensionResource(R.dimen.app_components_rounded_corner_shape)
+                            )
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.LocationOn,
+                                contentDescription = stringResource(R.string.set_default_location)
+                            )
+                            Spacer(Modifier.width(dimensionResource(R.dimen.padding_medium)))
+                            Text(text = stringResource(R.string.set_default_location))
                         }
                     }
                 } else if (weatherAppUiState.weatherLoadError != null) {

@@ -1,6 +1,5 @@
 package com.alron.weatherapp.api
 
-import ForecastWeatherResponse
 import com.alron.weatherapp.BuildConfig
 import com.alron.weatherapp.util.NUMBER_OF_DAYS_WITH_FORECAST
 import retrofit2.http.GET

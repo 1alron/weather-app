@@ -1,6 +1,7 @@
-package com.alron.weatherapp.api
+package com.alron.weatherapp.di
 
 import com.alron.weatherapp.BuildConfig
+import com.alron.weatherapp.api.WeatherApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -11,7 +12,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-
     @Provides
     fun provideRetrofit(): Retrofit = Retrofit.Builder()
         .baseUrl(BuildConfig.WEATHER_API_BASE_URL)
