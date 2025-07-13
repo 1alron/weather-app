@@ -272,7 +272,9 @@ fun ForecastDayItem(
             modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium))
         ) {
             Text(text = formatDateToRussian(forecastDay.date))
-            Row {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Text(
                     text = stringResource(
                         R.string.temp_in_celsius, fromMaxAndMinTempToAvg(
