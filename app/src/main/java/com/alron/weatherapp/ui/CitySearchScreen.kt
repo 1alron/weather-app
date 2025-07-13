@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.alron.weatherapp.R
 import com.alron.weatherapp.api.City
 
@@ -39,11 +41,13 @@ fun CitySearchScreen(
 ) {
     Column(
         modifier = modifier
+            .fillMaxWidth()
             .padding(
                 top = dimensionResource(R.dimen.search_screen_padding_top),
                 start = dimensionResource(R.dimen.search_screen_padding_sides),
                 end = dimensionResource(R.dimen.search_screen_padding_sides)
-            )
+            ),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(
@@ -52,7 +56,11 @@ fun CitySearchScreen(
                 )
             ),
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.widthIn(
+                max = dimensionResource(
+                    R.dimen.max_text_field_and_list_width
+                )
+            )
         ) {
             OutlinedTextField(
                 value = weatherAppUiState.query,
@@ -69,6 +77,7 @@ fun CitySearchScreen(
                     )
                 },
                 modifier = Modifier
+                    .weight(1f)
             )
             Box(
                 modifier = Modifier
@@ -87,7 +96,13 @@ fun CitySearchScreen(
             }
         }
         Spacer(Modifier.height(dimensionResource(R.dimen.padding_small)))
-        LazyColumn {
+        LazyColumn(
+            modifier = Modifier.widthIn(
+                max = dimensionResource(
+                    R.dimen.max_text_field_and_list_width
+                )
+            )
+        ) {
             items(weatherAppUiState.cityList) { city ->
                 CityItem(
                     city = city,
