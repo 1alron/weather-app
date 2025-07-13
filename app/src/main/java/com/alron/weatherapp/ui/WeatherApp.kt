@@ -4,6 +4,10 @@ import android.app.Activity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -24,57 +28,64 @@ fun WeatherApp() {
     val navController: NavHostController = rememberNavController()
     val context = LocalContext.current
 
+    var startDestination by remember { mutableStateOf<String?>(null) }
+
     LaunchedEffect(Unit) {
         val defaultCity = viewModel.getDefaultCity()
-        if (defaultCity != null) {
+        startDestination = if (defaultCity != null) {
             viewModel.onCitySelected(defaultCity)
+            Routes.Weather.name
+        } else {
+            Routes.SearchCities.name
         }
     }
 
-    NavHost(
-        navController = navController,
-        startDestination = Routes.Weather.name
-    ) {
-        composable(route = Routes.Weather.name) {
-            WeatherScreen(
-                weatherAppUiState = weatherAppUiState,
-                onSearchButtonClicked = {
-                    navController.navigate(Routes.SearchCities.name)
-                },
-                onSetDefaultLocation = {
-                    viewModel.setDefaultLocation(
-                        city = weatherAppUiState.currentCity!!,
-                        weather = weatherAppUiState.currentWeather!!,
-                        forecast = weatherAppUiState.forecast
-                    )
+    startDestination?.let { dest ->
+        NavHost(
+            navController = navController,
+            startDestination = dest
+        ) {
+            composable(route = Routes.Weather.name) {
+                WeatherScreen(
+                    weatherAppUiState = weatherAppUiState,
+                    onSearchButtonClicked = {
+                        navController.navigate(Routes.SearchCities.name)
+                    },
+                    onSetDefaultLocation = {
+                        viewModel.setDefaultLocation(
+                            city = weatherAppUiState.currentCity!!,
+                            weather = weatherAppUiState.currentWeather!!,
+                            forecast = weatherAppUiState.forecast
+                        )
 
-                },
-                onRefresh = {
-                    if (weatherAppUiState.currentCity != null) {
-                        viewModel.loadWeather(weatherAppUiState.currentCity.name)
-                    }
-                }
-            )
-        }
-
-        composable(route = Routes.SearchCities.name) {
-            CitySearchScreen(
-                weatherAppUiState = weatherAppUiState,
-                onQueryChange = viewModel::onQueryChange,
-                onBackButtonClicked = {
-                    if (!navController.popBackStack()) {
-                        (context as? Activity)?.finish()
-                    }
-                },
-                onCitySelected = { city ->
-                    navController.navigate(Routes.Weather.name) {
-                        popUpTo(0) {
-                            inclusive = true
+                    },
+                    onRefresh = {
+                        if (weatherAppUiState.currentCity != null) {
+                            viewModel.loadWeather(weatherAppUiState.currentCity.name)
                         }
                     }
-                    viewModel.onCitySelected(city)
-                }
-            )
+                )
+            }
+
+            composable(route = Routes.SearchCities.name) {
+                CitySearchScreen(
+                    weatherAppUiState = weatherAppUiState,
+                    onQueryChange = viewModel::onQueryChange,
+                    onBackButtonClicked = {
+                        if (!navController.popBackStack()) {
+                            (context as? Activity)?.finish()
+                        }
+                    },
+                    onCitySelected = { city ->
+                        navController.navigate(Routes.Weather.name) {
+                            popUpTo(0) {
+                                inclusive = true
+                            }
+                        }
+                        viewModel.onCitySelected(city)
+                    }
+                )
+            }
         }
     }
 }
