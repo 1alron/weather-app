@@ -17,4 +17,6 @@
     <string name="current_weather_icon">Текущая погода</string>
     <string name="url_coil_format">https:%s</string>
     <string name="weather_forecast_some_days">Прогноз погоды на %d дней</string>
+
+    <string name="back_button_description">Назад</string>
 </resources>

@@ -1,8 +1,10 @@
 package com.alron.weatherapp.ui
 
+import android.app.Activity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -20,6 +22,7 @@ fun WeatherApp() {
     val viewModel: WeatherAppViewModel = hiltViewModel()
     val weatherAppUiState = viewModel.uiState.collectAsState().value
     val navController: NavHostController = rememberNavController()
+    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         val defaultCity = viewModel.getDefaultCity()
@@ -58,6 +61,11 @@ fun WeatherApp() {
             CitySearchScreen(
                 weatherAppUiState = weatherAppUiState,
                 onQueryChange = viewModel::onQueryChange,
+                onBackButtonClicked = {
+                    if (!navController.popBackStack()) {
+                        (context as? Activity)?.finish()
+                    }
+                },
                 onCitySelected = { city ->
                     navController.navigate(Routes.Weather.name) {
                         popUpTo(0) {
