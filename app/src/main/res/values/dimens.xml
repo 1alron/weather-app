@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="padding_medium">16dp</dimen>
+    <dimen name="padding_small">8dp</dimen>
+
+    <dimen name="padding_top_bar">32dp</dimen>
+
+    <dimen name="padding_between_text_field_and_button">16dp</dimen>
+    <dimen name="back_button_size">40dp</dimen>
+
+    <dimen name="max_text_field_and_list_width">500dp</dimen>
+    <dimen name="max_current_weather_card_width">600dp</dimen>
+    <dimen name="min_location_button_width">170dp</dimen>
+
+    <dimen name="outlined_button_content_start_padding">4dp</dimen>
+    <dimen name="outlined_button_content_end_padding">20dp</dimen>
+
+    <dimen name="search_screen_padding_top">32dp</dimen>
+    <dimen name="search_screen_padding_sides">16dp</dimen>
+
+    <dimen name="weather_screen_spacer_height">36dp</dimen>
+
+    <dimen name="app_components_rounded_corner_shape">12dp</dimen>
+    <dimen name="card_medium_elevation">8dp</dimen>
+    <dimen name="card_small_elevation">2dp</dimen>
+    <dimen name="padding_to_small_card_elevation">2dp</dimen>
+    <dimen name="weather_icon_size">48dp</dimen>
+</resources>
