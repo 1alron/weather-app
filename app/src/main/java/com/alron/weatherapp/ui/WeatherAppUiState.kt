@@ -1,6 +1,6 @@
 package com.alron.weatherapp.ui
 
-import ForecastDay
+import com.alron.weatherapp.api.ForecastDay
 import com.alron.weatherapp.api.City
 import com.alron.weatherapp.api.CurrentWeather
 
