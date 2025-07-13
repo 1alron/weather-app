@@ -55,9 +55,6 @@ class WeatherAppViewModel @Inject constructor(
                 name = cache.cityName,
                 region = cache.region,
                 country = cache.country,
-                lat = 0.0,
-                lon = 0.0,
-                url = ""
             )
         }
     }
