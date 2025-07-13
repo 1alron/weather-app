@@ -3,7 +3,6 @@ package com.alron.weatherapp.ui
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -22,9 +22,7 @@ import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -116,21 +114,30 @@ fun WeatherScreen(
                                 ForecastDayItem(forecastDay)
                             }
                         }
-                        OutlinedButton(
-                            onClick = onSetDefaultLocation,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = dimensionResource(R.dimen.padding_medium)),
-                            shape = RoundedCornerShape(
-                                dimensionResource(R.dimen.app_components_rounded_corner_shape)
+                        Spacer(
+                            Modifier.height(
+                                dimensionResource(
+                                    R.dimen.weather_screen_spacer_height
+                                )
                             )
+                        )
+                        Box(
+                            modifier = Modifier.fillMaxWidth()
                         ) {
-                            Icon(
+                            WeatherAppButton(
+                                onClick = onSetDefaultLocation,
                                 imageVector = Icons.Default.LocationOn,
-                                contentDescription = stringResource(R.string.set_default_location)
+                                contentDescriptionId = R.string.set_default_location,
+                                textId = R.string.set_default_location,
+                                modifier = Modifier
+                                    .align(alignment = Alignment.Center)
+                                    .widthIn(
+                                        min = dimensionResource(
+                                            R.dimen.min_location_button_width
+                                        )
+                                    )
+                                    .padding(bottom = dimensionResource(R.dimen.padding_small))
                             )
-                            Spacer(Modifier.width(dimensionResource(R.dimen.padding_medium)))
-                            Text(text = stringResource(R.string.set_default_location))
                         }
                     }
                 } else if (weatherAppUiState.weatherLoadError != null) {
@@ -155,27 +162,12 @@ fun WeatherScreenTopBar(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    OutlinedButton(
+    WeatherAppButton(
         onClick = onClick,
-        contentPadding = PaddingValues(
-            start = dimensionResource(R.dimen.outlined_button_content_start_padding),
-            end = dimensionResource(R.dimen.outlined_button_content_end_padding)
-        ),
-        shape = RoundedCornerShape(
-            dimensionResource(
-                R.dimen.app_components_rounded_corner_shape
-            )
-        )
-    ) {
-        Icon(
-            imageVector = Icons.Default.Search,
-            contentDescription = stringResource(R.string.choose_city)
-        )
-        Spacer(Modifier.width(dimensionResource(R.dimen.padding_medium)))
-        Text(
-            text = stringResource(R.string.choose_city)
-        )
-    }
+        imageVector = Icons.Default.Search,
+        contentDescriptionId = R.string.choose_city,
+        textId = R.string.choose_city
+    )
 }
 
 @Composable
@@ -197,6 +189,7 @@ fun CurrentWeather(
                 containerColor = MaterialTheme.colorScheme.primaryContainer
             ),
             modifier = Modifier
+                .widthIn(max = dimensionResource(R.dimen.max_current_weather_card_width))
                 .fillMaxWidth(),
             elevation = CardDefaults.cardElevation(
                 defaultElevation = dimensionResource(R.dimen.card_medium_elevation)
