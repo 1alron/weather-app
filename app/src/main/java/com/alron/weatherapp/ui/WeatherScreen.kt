@@ -166,7 +166,8 @@ fun WeatherScreenTopBar(
         onClick = onClick,
         imageVector = Icons.Default.Search,
         contentDescriptionId = R.string.choose_city,
-        textId = R.string.choose_city
+        textId = R.string.choose_city,
+        modifier = modifier
     )
 }
 
@@ -175,7 +176,9 @@ fun CurrentWeather(
     weatherAppUiState: WeatherAppUiState,
     modifier: Modifier = Modifier
 ) {
-    Column {
+    Column(
+        modifier = modifier
+    ) {
         Text(
             text = stringResource(
                 R.string.current_weather_in_city,
@@ -256,7 +259,7 @@ fun ForecastDayItem(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer
         ),
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(dimensionResource(R.dimen.padding_to_small_card_elevation)),
         shape = RoundedCornerShape(
