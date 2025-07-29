@@ -91,19 +91,14 @@ class WeatherAppViewModel @Inject constructor(
         _uiState.update { it.copy(isLoadingWeatherAndForecast = true) }
         viewModelScope.launch {
             try {
-                val currentResponse = try {
-                    weatherApiService.getCurrentWeather(location)
-                } catch (e: IOException) {
-                    null
-                }
-
                 val forecastResponse = try {
                     weatherApiService.getWeatherForecast(location, NUMBER_OF_DAYS_WITH_FORECAST)
                 } catch (e: IOException) {
                     null
                 }
 
-                if (currentResponse != null && forecastResponse != null) {
+                if (forecastResponse != null) {
+                    val currentWeather = forecastResponse.current
                     val city = _uiState.value.currentCity!!
                     val existingCache = weatherDao.getCache(city.id)
                     val cache = WeatherCache(
@@ -111,14 +106,14 @@ class WeatherAppViewModel @Inject constructor(
                         cityName = city.name,
                         region = city.region,
                         country = city.country,
-                        currentWeatherJson = Gson().toJson(currentResponse),
+                        currentWeatherJson = Gson().toJson(currentWeather),
                         forecastJson = Gson().toJson(forecastResponse),
                         isDefault = existingCache?.isDefault ?: false
                     )
                     weatherDao.insertCache(cache)
                     _uiState.update {
                         it.copy(
-                            currentWeather = currentResponse.current,
+                            currentWeather = currentWeather,
                             forecast = forecastResponse.forecast.forecastday,
                             isLoadingWeatherAndForecast = false,
                             weatherLoadError = null

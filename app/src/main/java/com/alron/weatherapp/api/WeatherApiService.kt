@@ -13,13 +13,6 @@ interface WeatherApiService {
         @Query("key") key: String = BuildConfig.WEATHER_API_KEY,
     ): List<City>
 
-    @GET("current.json")
-    suspend fun getCurrentWeather(
-        @Query("q") location: String,
-        @Query("lang") language: String = "ru",
-        @Query("key") key: String = BuildConfig.WEATHER_API_KEY
-    ): CurrentWeatherResponse
-
     @GET("forecast.json")
     suspend fun getWeatherForecast(
         @Query("q") location: String,
