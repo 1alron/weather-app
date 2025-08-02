@@ -10,7 +10,8 @@
     <string name="unknown_city">Город не найден</string>
     <string name="current_weather_in_city">Погода сейчас, г. %s</string>
     <string name="temp_in_celsius">%d°С</string>
-    <string name="wind_speed_in_met_per_sec">Скорость ветра: %dм/c</string>
+    <string name="wind_speed_in_met_per_sec">Скорость ветра: %d м/c</string>
+    <string name="max_wind_speed_in_met_per_sec">Максимальная скорость ветра: %d м/c</string>
     <string name="humidity_in_perc">Влажность воздуха: %d%%</string>
     <string name="set_default_location">Я тут</string>
 

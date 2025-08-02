@@ -1,8 +1,8 @@
 package com.alron.weatherapp.ui
 
-import com.alron.weatherapp.api.ForecastDay
+import com.alron.weatherapp.api.model.ForecastDay
 import com.alron.weatherapp.api.City
-import com.alron.weatherapp.api.CurrentWeather
+import com.alron.weatherapp.api.model.CurrentWeather
 
 data class WeatherAppUiState(
     val query: String = "",
