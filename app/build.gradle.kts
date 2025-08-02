@@ -17,8 +17,8 @@ android {
         applicationId = "com.alron.weatherapp"
         minSdk = 23
         targetSdk = 35
-        versionCode = 3
-        versionName = "1.0.2"
+        versionCode = 4
+        versionName = "1.1.0"
 
         val properties = Properties().apply {
             load(rootProject.file("local.properties").inputStream())
