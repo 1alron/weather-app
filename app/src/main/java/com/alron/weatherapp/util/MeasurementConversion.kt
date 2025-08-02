@@ -6,11 +6,6 @@ fun fromKilPerHourToMetPerSec(
     kilPerHour: Double
 ) = (kilPerHour / 3.6).roundToInt()
 
-fun fromMaxAndMinTempToAvg(
-    maxTemp: Double,
-    minTemp: Double
-) = listOf(maxTemp, minTemp).average().roundToInt()
-
 // not using DateTimeFormatter or something like that because we have to support Android API's < 26
 fun formatDateToRussian(inputDate: String): String {
     val parts = inputDate.split("-")

@@ -1,4 +1,4 @@
-package com.alron.weatherapp.db
+package com.alron.weatherapp.db.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

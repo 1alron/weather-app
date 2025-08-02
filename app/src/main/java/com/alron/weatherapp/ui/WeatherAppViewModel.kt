@@ -1,15 +1,14 @@
 package com.alron.weatherapp.ui
 
-import com.alron.weatherapp.api.ForecastDay
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alron.weatherapp.api.City
-import com.alron.weatherapp.api.CurrentWeather
-import com.alron.weatherapp.api.CurrentWeatherResponse
-import com.alron.weatherapp.api.ForecastWeatherResponse
 import com.alron.weatherapp.api.WeatherApiService
-import com.alron.weatherapp.db.WeatherCache
+import com.alron.weatherapp.api.model.CurrentWeather
+import com.alron.weatherapp.api.model.Forecast
+import com.alron.weatherapp.api.model.ForecastDay
 import com.alron.weatherapp.db.WeatherDao
+import com.alron.weatherapp.db.model.WeatherCache
 import com.alron.weatherapp.util.NUMBER_OF_DAYS_WITH_FORECAST
 import com.alron.weatherapp.util.NUMBER_OF_SYMBOLS_SEARCH_START
 import com.google.gson.Gson
@@ -31,7 +30,7 @@ class WeatherAppViewModel @Inject constructor(
 
     fun setDefaultLocation(
         city: City, weather: CurrentWeather,
-        forecast: List<ForecastDay>
+        forecastday: List<ForecastDay>
     ) {
         viewModelScope.launch {
             weatherDao.clearDefaultFlags()
@@ -41,7 +40,7 @@ class WeatherAppViewModel @Inject constructor(
                 region = city.region,
                 country = city.country,
                 currentWeatherJson = Gson().toJson(weather),
-                forecastJson = Gson().toJson(forecast),
+                forecastJson = Gson().toJson(Forecast(forecastday)),
                 isDefault = true
             )
             weatherDao.insertCache(defaultCityCache)
@@ -92,13 +91,15 @@ class WeatherAppViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val forecastResponse = try {
-                    weatherApiService.getWeatherForecast(location, NUMBER_OF_DAYS_WITH_FORECAST)
-                } catch (e: IOException) {
+                    weatherApiService
+                        .getCurrentWeatherAndForecast(location, NUMBER_OF_DAYS_WITH_FORECAST)
+                } catch (_: IOException) {
                     null
                 }
 
                 if (forecastResponse != null) {
                     val currentWeather = forecastResponse.current
+                    val forecast = forecastResponse.forecast
                     val city = _uiState.value.currentCity!!
                     val existingCache = weatherDao.getCache(city.id)
                     val cache = WeatherCache(
@@ -107,7 +108,7 @@ class WeatherAppViewModel @Inject constructor(
                         region = city.region,
                         country = city.country,
                         currentWeatherJson = Gson().toJson(currentWeather),
-                        forecastJson = Gson().toJson(forecastResponse),
+                        forecastJson = Gson().toJson(forecast),
                         isDefault = existingCache?.isDefault ?: false
                     )
                     weatherDao.insertCache(cache)
@@ -124,14 +125,18 @@ class WeatherAppViewModel @Inject constructor(
                         weatherDao.getCache(city.id)
                     }
                     if (cached != null) {
-                        val currentWeather = Gson().fromJson(cached.currentWeatherJson,
-                            CurrentWeatherResponse::class.java)
-                        val forecast = Gson().fromJson(cached.forecastJson,
-                            ForecastWeatherResponse::class.java)
+                        val currentWeather = Gson().fromJson(
+                            cached.currentWeatherJson,
+                            CurrentWeather::class.java
+                        )
+                        val forecast = Gson().fromJson(
+                            cached.forecastJson,
+                            Forecast::class.java
+                        )
                         _uiState.update {
                             it.copy(
-                                currentWeather = currentWeather.current,
-                                forecast = forecast.forecast.forecastday,
+                                currentWeather = currentWeather,
+                                forecast = forecast.forecastday,
                                 isLoadingWeatherAndForecast = false,
                                 weatherLoadError = "Отсутствует подключение к интернету." +
                                         " Показаны последние сохраненные данные:"

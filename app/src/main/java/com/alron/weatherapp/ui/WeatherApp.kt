@@ -18,6 +18,8 @@ import com.alron.weatherapp.ui.animations.enterSlideInFromLeft
 import com.alron.weatherapp.ui.animations.enterSlideInFromRight
 import com.alron.weatherapp.ui.animations.exitSlideOutToLeft
 import com.alron.weatherapp.ui.animations.exitSlideOutToRight
+import com.alron.weatherapp.ui.screens.CitySearchScreen
+import com.alron.weatherapp.ui.screens.WeatherScreen
 
 
 enum class Routes {
@@ -35,12 +37,16 @@ fun WeatherApp() {
     var startDestination by remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(Unit) {
-        val defaultCity = viewModel.getDefaultCity()
-        startDestination = if (defaultCity != null) {
-            viewModel.onCitySelected(defaultCity)
+        startDestination = if (weatherAppUiState.currentCity != null) {
             Routes.Weather.name
         } else {
-            Routes.SearchCities.name
+            val defaultCity = viewModel.getDefaultCity()
+            if (defaultCity != null) {
+                viewModel.onCitySelected(defaultCity)
+                Routes.Weather.name
+            } else {
+                Routes.SearchCities.name
+            }
         }
     }
 
@@ -65,7 +71,7 @@ fun WeatherApp() {
                         viewModel.setDefaultLocation(
                             city = weatherAppUiState.currentCity!!,
                             weather = weatherAppUiState.currentWeather!!,
-                            forecast = weatherAppUiState.forecast
+                            forecastday = weatherAppUiState.forecast
                         )
 
                     },
@@ -76,7 +82,6 @@ fun WeatherApp() {
                     }
                 )
             }
-
             composable(
                 route = Routes.SearchCities.name,
                 enterTransition = { enterSlideInFromLeft() },
